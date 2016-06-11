@@ -1,0 +1,2 @@
+Image1,Image2
+Toyota_Yaris_2007_01.jpg,Opel_Corsa_2010_10.jpg

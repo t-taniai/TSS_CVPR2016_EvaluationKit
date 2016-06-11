@@ -1,7 +1,8 @@
 This evaluation kit provides evaluation and visualization tools for our dataset.
 The code and dataset is provided for research use only.
 If you use our dataset, please cite our CVPR 2016 paper.
-We thank Daniel Scharstein for providing code for reading and writing .flo files. 
+We thank Daniel Scharstein for providing code for reading and writing .flo files.
+Our dataset can be found at http://taniai.space/projects/cvpr16_dccs/
 
 @InProceedings{Taniai2016,
 	author = {Tatsunori Taniai and Sudipta N. Sinha and Yoichi Sato},

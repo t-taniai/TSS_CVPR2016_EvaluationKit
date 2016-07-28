@@ -218,7 +218,6 @@ float FlowIO::ComputeMaxMotion(cv::Mat motim, cv::Mat& knownMask, cv::Mat& rad)
 {
 	cv::Size sh = motim.size();
 	int width = sh.width, height = sh.height;
-	int x, y;
 
 	// determine motion range:
 	double maxx = -999, maxy = -999;
@@ -243,7 +242,6 @@ cv::Mat FlowIO::MotionToColor(cv::Mat motim, float maxmotion, cv::Scalar bgColor
 {
 	cv::Size sh = motim.size();
 	int width = sh.width, height = sh.height;
-	int x, y;
 	// determine motion range:
 	double maxx = -999, maxy = -999;
 	double minx = 999, miny = 999;

@@ -67,4 +67,6 @@ The scores corresponding to the 5 pixel threshold are reported as the primary re
 History:
 --------
 
-06/10/2016 Released the evaluation kit 1.0
+06/10/2016 v1.0 Released the evaluation kit
+07/28/2016 v1.1 Added "autoFlip" option
+

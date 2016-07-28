@@ -6,7 +6,11 @@
 %% Output file
 % scores.csv in resultsDir
 %%
-function RunEvaluation(resultsDir, datasetDir)
+function RunEvaluation(resultsDir, datasetDir, autoFlip)
+    if nargin < 3
+        autoFlip = false;
+    end
+    
     addpath('./flow-code-matlab');
 
     suffix = '';
@@ -54,6 +58,17 @@ function RunEvaluation(resultsDir, datasetDir)
             else
                 mask1 = imresize(im2double(mask1), [size(mask1_gt, 1) size(mask1_gt, 2)], 'bilinear') > 0.5;
                 mask2 = imresize(im2double(mask2), [size(mask2_gt, 1) size(mask2_gt, 2)], 'bilinear') > 0.5;
+            end
+            
+            if autoFlip && ~isempty(mask1) && ~isempty(mask2) && ~isempty(mask1_gt) && ~isempty(mask2_gt) 
+                [~, FAcc1_1] = compute_scores(mask1, [], mask1_gt, [], THRESHOLDS);
+                [~, FAcc2_1] = compute_scores(mask2, [], mask2_gt, [], THRESHOLDS);
+                [~, FAcc1_0] = compute_scores(~mask1, [], mask1_gt, [], THRESHOLDS);
+                [~, FAcc2_0] = compute_scores(~mask2, [], mask2_gt, [], THRESHOLDS);
+                if FAcc1_1 + FAcc2_1 < FAcc1_0 + FAcc2_0
+                    mask1 = ~mask1;
+                    mask2 = ~mask2;
+                end
             end
 
             curr = curr + 1;

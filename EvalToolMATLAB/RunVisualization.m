@@ -5,16 +5,19 @@
 %% Output files
 % warped*.png, foreground*.png, flow*.png in each subdirectory of resultsDir
 %%
-function RunVisualization(resultsDir, datasetDir, visSubDir, bgcolor, flbgcolor)
-if nargin < 3
-    visSubDir = '';
-end
-if nargin < 4
-    bgcolor = [0,1,1];
-end
-if nargin < 5
-    flbgcolor = [0.5,0.5,0.5];
-end
+function RunVisualization(resultsDir, datasetDir, visSubDir, bgcolor, flbgcolor, autoFlip)
+    if nargin < 3
+        visSubDir = '';
+    end
+    if nargin < 4
+        bgcolor = [0,1,1];
+    end
+    if nargin < 5
+        flbgcolor = [0.5,0.5,0.5];
+    end
+    if nargin < 6
+        autoFlip = false;
+    end
 
     addpath('./flow-code-matlab');
 
@@ -39,7 +42,7 @@ end
             image2 = im2double(imread([gtDir, '/image2.png'])); 
 
             [flow1, flow2, mask1, mask2] = load_data(desDir, suffix);
-            [flow1_gt, flow2_gt] = load_data(gtDir);
+            [flow1_gt, flow2_gt, mask1_gt, mask2_gt] = load_data(gtDir);
 
             if isempty(flow1) && isempty(flow2) && isempty(mask1) && isempty(mask2)
                 continue;
@@ -61,6 +64,20 @@ end
             if ~isempty(flow1_gt) && ~isempty(flow2_gt) && ~isempty(flow1) && ~isempty(flow2) 
                 [flow1_gt, flow2_gt] = resize_flows(flow1_gt, flow2_gt, size(flow1), size(flow2));
                 maxmotion = max(computeMaxmotion(flow1_gt), computeMaxmotion(flow2_gt));
+            end
+
+            if autoFlip && ~isempty(mask1) && ~isempty(mask2) && ~isempty(mask1_gt) && ~isempty(mask2_gt) 
+                mask1_gt = imresize(im2double(mask1_gt), [size(mask1, 1) size(mask1, 2)], 'bilinear') > 0.5;
+                mask2_gt = imresize(im2double(mask2_gt), [size(mask2, 1) size(mask2, 2)], 'bilinear') > 0.5;
+                
+                FAcc1_1 = compute_scores(mask1, [], mask1_gt, [], []);
+                FAcc2_1 = compute_scores(mask2, [], mask2_gt, [], []);
+                FAcc1_0 = compute_scores(~mask1, [], mask1_gt, [], []);
+                FAcc2_0 = compute_scores(~mask2, [], mask2_gt, [], []);
+                if FAcc1_1 + FAcc2_1 < FAcc1_0 + FAcc2_0
+                    mask1 = ~mask1;
+                    mask2 = ~mask2;
+                end
             end
 
             outdir = [desDir, '/', visSubDir];

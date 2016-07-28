@@ -11,6 +11,7 @@ using namespace cv;
 
 cv::Scalar BGCOLOR = cv::Scalar(255, 255, 0);
 cv::Scalar FLBGCOLOR = cv::Scalar(128, 128, 128);
+bool autoFlip = false;
 
 void load_data(string dir, cv::Mat& flow1, cv::Mat& flow2, cv::Mat& mask1, cv::Mat& mask2, string& image1 = string(), string& image2 = string())
 {
@@ -128,6 +129,27 @@ void output_visualization(string srcDir, string desDir, string datasetDir)
 			float maxmotion2 = FlowIO::ComputeMaxMotion(flowGT2);
 			maxmotion = std::max({ maxmotion1, maxmotion2 });
 		}
+
+		if (autoFlip && !maskGT1.empty() && !maskGT2.empty() && !mask1.empty() && !mask2.empty())
+		{
+			if (maskGT1.size() != mask1.size()){
+				cv::resize(maskGT1, maskGT1, mask1.size(), 0);
+				maskGT1 = maskGT1 > 128;
+			}
+			if (maskGT2.size() != mask2.size()) {
+				cv::resize(maskGT2, maskGT2, mask2.size(), 0);
+				maskGT2 = maskGT2 > 128;
+			}
+
+			double score1_1 = compute_score(maskGT1, cv::Mat(), mask1, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score2_1 = compute_score(maskGT2, cv::Mat(), mask2, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score1_0 = compute_score(maskGT1, cv::Mat(), ~mask1, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score2_0 = compute_score(maskGT2, cv::Mat(), ~mask2, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			if (score1_1 + score2_1 < score1_0 + score2_0){
+				mask1 = ~mask1;
+				mask2 = ~mask2;
+			}
+		}
 	}
 
 	_mkdir((desDir).c_str());
@@ -229,18 +251,30 @@ void run_evaluation(string resultDir, string datasetDir)
 		if (!flow1.empty() && !flow2.empty())
 			CvUtils::ResizeFlowPair(flow1, flow2, flowGT1.size(), flowGT2.size());
 
+		if (autoFlip && !maskGT1.empty() && !maskGT2.empty() && !mask1.empty() && !mask2.empty())
+		{
+			double score1_1 = compute_score(maskGT1, cv::Mat(), mask1, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score2_1 = compute_score(maskGT2, cv::Mat(), mask2, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score1_0 = compute_score(maskGT1, cv::Mat(), ~mask1, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			double score2_0 = compute_score(maskGT2, cv::Mat(), ~mask2, cv::Mat(), cv::Mat_<double>(0, 1))(0);
+			if (score1_1 + score2_1 < score1_0 + score2_0){
+				mask1 = ~mask1;
+				mask2 = ~mask2;
+			}
+		}
+
 		if (mask1.empty() || mask2.empty())
 			computeMaskFromFlow(flow1, flow2, mask1, mask2, 20);
 
 		score = compute_score(maskGT1, flowGT1, mask1, flow1, thresholds / 100.0 * (double)std::max(flowGT2.rows, flowGT2.cols));
 		fprintf(scoreTable, "%s_1to2,%s,%s,%lf,%d", dirs[i].c_str(), name1.c_str(), name2.c_str(), score.at<double>(0), flip);
-		for (int i = 0; i < THRESHOLD; i++) { fprintf(scoreTable, ",%lf", score.at<double>(i + 1)); } fprintf(scoreTable, "\n");
+		for (int j = 0; j < THRESHOLD; j++) { fprintf(scoreTable, ",%lf", score.at<double>(j + 1)); } fprintf(scoreTable, "\n");
 		meanScore += score;
 		if (flip == 0) meanNoFlipScore += score;
 
 		score = compute_score(maskGT2, flowGT2, mask2, flow2, thresholds / 100.0 * (double)std::max(flowGT1.rows, flowGT1.cols));
 		fprintf(scoreTable, "%s_1to2,%s,%s,%lf,%d", dirs[i].c_str(), name2.c_str(), name1.c_str(), score.at<double>(0), flip);
-		for (int i = 0; i < THRESHOLD; i++) { fprintf(scoreTable, ",%lf", score.at<double>(i + 1)); } fprintf(scoreTable, "\n");
+		for (int j = 0; j < THRESHOLD; j++) { fprintf(scoreTable, ",%lf", score.at<double>(j + 1)); } fprintf(scoreTable, "\n");
 		meanScore += score;
 		if (flip == 0) meanNoFlipScore += score;
 		if (flip == 0) NoFlipCount++;
@@ -282,6 +316,8 @@ int main(int argn, char** args)
 
 	std::string mode = "evaluation";
 	argParser.TryGetArgment("mode", mode);
+	argParser.TryGetArgment("autoFlip", autoFlip); // Use only when cosegmentation methods are not aware which of 0/1 is the foreground label.
+
 
 	if (mode == "evaluation")
 	{

@@ -16,7 +16,7 @@ function [ faccs, segIUR ] = compute_scores( mask, flow, maskGT, flowGT, thresho
             faccs(t) = 1.0 - sum(ferror(fvalidGT) > thresholds(t)) / nvalidGT;
         end
     else
-        faccs(:) = zeros(size(thresholds));
+        faccs = zeros(size(thresholds));
     end
 end
 

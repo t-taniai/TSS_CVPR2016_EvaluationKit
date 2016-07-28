@@ -11,13 +11,13 @@ namespace CvUtils
 		cv::Mat m1m2 = m1.mul(m2);
 		m1m2 = m1m2.reshape(1, m1.rows*m1.cols);
 		cv::Mat m1m2dot;
-		cv::reduce(m1m2, m1m2dot, 1, CV_REDUCE_SUM);
+		cv::reduce(m1m2, m1m2dot, 1, cv::REDUCE_SUM);
 		return m1m2dot.reshape(1, m1.rows);
 	}
 	cv::Mat channelSum(const cv::Mat& m1)
 	{
 		cv::Mat m = m1.reshape(1, m1.rows*m1.cols);
-		cv::reduce(m, m, 1, CV_REDUCE_SUM);
+		cv::reduce(m, m, 1, cv::REDUCE_SUM);
 		return m.reshape(1, m1.rows);
 	}
 
@@ -93,7 +93,7 @@ namespace CvUtils
 		}
 
 		cv::Mat img;
-		cv::remap(image, img, map_x, map_y, cv::InterpolationFlags::INTER_LINEAR, cv::BORDER_CONSTANT, borderValue);
+		cv::remap(image, img, map_x, map_y, cv::INTER_LINEAR, cv::BORDER_CONSTANT, borderValue);
 		return img;
 	}
 

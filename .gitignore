@@ -6,3 +6,5 @@ EvalToolVC/EvalTool.opensdf
 *.pdb
 *.obj
 *.asv
+*.exe
+*.dll

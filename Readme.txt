@@ -66,7 +66,7 @@ The scores corresponding to the 5 pixel threshold are reported as the primary re
 Executable Binaries:
 --------------------
 
-Windows binaries of EvalToolVC are avaialbe at [releases](../../releases).
+Windows binaries of EvalToolVC are avaialbe at https://github.com/t-taniai/TSS_CVPR2016_EvaluationKit/releases
 
 
 --------

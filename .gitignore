@@ -1,1 +1,7 @@
 *.db
+*.sdf
+*.log
+*.tlog
+EvalToolVC/EvalTool.opensdf
+*.pdb
+*.obj

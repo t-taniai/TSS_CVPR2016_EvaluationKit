@@ -317,6 +317,7 @@ int main(int argn, char** args)
 	std::string mode = "evaluation";
 	argParser.TryGetArgment("mode", mode);
 	argParser.TryGetArgment("autoFlip", autoFlip); // Use only when cosegmentation methods are not aware which of 0/1 is the foreground label.
+	std::cout << "Auto flip segmentation mask  : " << (autoFlip ? "on" : "off") << " (Use only when foreground label is not consistent. Enabled by -autoFlip 1)" << std::endl;
 
 
 	if (mode == "evaluation")

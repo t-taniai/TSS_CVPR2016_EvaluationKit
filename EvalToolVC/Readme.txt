@@ -4,6 +4,8 @@ How to use:
 
 RunEvaluation.bat is the main script for evaluation.
 RunVisualization.bat is the main script for visualization.
+By double clicking the bat files, evaluation/visualization will be done on sample results in /TSS_CVPR2016_EvaluationKit/Results.
+By drag-and-dropping the /Results folder (or any folder that has the same structure), you can also evaluate/visualize data in that folder.
 
 
 ---------

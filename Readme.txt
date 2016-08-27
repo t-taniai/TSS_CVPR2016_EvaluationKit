@@ -62,6 +62,12 @@ The flow accuracy is then computed as 1 - #{ p | p is in true foreground and E(p
 We compute scores for a range of threshold values -- from 1 to 50 pixels.
 The scores corresponding to the 5 pixel threshold are reported as the primary results.
 
+--------------------
+Executable Binaries:
+--------------------
+
+Windows binaries of EvalToolVC are avaialbe at [releases](../../releases).
+
 
 --------
 History:
@@ -69,4 +75,4 @@ History:
 
 06/10/2016 v1.0 Released the evaluation kit
 07/28/2016 v1.1 Added "autoFlip" option
-
+08/26/2016 v1.2 Added more example results and fixed bat files of EvalToolVC. Released windows binaries using Github releases.

@@ -2,11 +2,13 @@ This evaluation kit provides evaluation and visualization tools for our dataset.
 The code and dataset is provided for research use only.
 If you use our dataset, please cite our CVPR 2016 paper.
 We thank Daniel Scharstein for providing code for reading and writing .flo files.
+We also thank to Lin et al. [25], Rubinstein et al. [42], Hariharan et al. [20]
+for providing datasets from which the images of our dataset are taken.
 Our dataset can be found at http://taniai.space/projects/cvpr16_dccs/
 
 @InProceedings{Taniai2016,
 	author = {Tatsunori Taniai and Sudipta N. Sinha and Yoichi Sato},
-	title = {Joint Recovery of Dense Correspondence and Cosegmentation in Two Images},
+	title = {{Joint Recovery of Dense Correspondence and Cosegmentation in Two Images}},
 	booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
 	month = {June},
 	year = {2016}

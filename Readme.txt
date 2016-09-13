@@ -19,7 +19,7 @@ Contents:
 ---------
 
 - Dataset : Sample dataset containing some image pairs from FG3DCar, JODS and PASCAL.
-- Results : Sample results for the two image pairs
+- Results : Sample results for the image pairs
 - EvalToolVC     : Evaluation and visualization tool written using Visual Studio 2013 (C++)
 - EvalToolMATLAB : Evaluation and visualization tool written using MATLAB
 

@@ -27,7 +27,7 @@ Contents:
 Instructions:
 -------------
 
-The following files describe use the evaluation toolkit.
+The following files describe how to use the evaluation toolkit.
 
 	- EvalToolVC/Readme.txt
 	- EvalToolMATLAB/Readme.txt

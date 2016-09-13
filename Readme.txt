@@ -18,7 +18,7 @@ Our dataset can be found at http://taniai.space/projects/cvpr16_dccs/
 Contents:
 ---------
 
-- Dataset : Sample dataset containing two image pairs
+- Dataset : Sample dataset containing some image pairs from FG3DCar, JODS and PASCAL.
 - Results : Sample results for the two image pairs
 - EvalToolVC     : Evaluation and visualization tool written using Visual Studio 2013 (C++)
 - EvalToolMATLAB : Evaluation and visualization tool written using MATLAB

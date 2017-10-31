@@ -10,6 +10,7 @@ Our dataset can be found at http://taniai.space/projects/cvpr16_dccs/
 	author = {Tatsunori Taniai and Sudipta N. Sinha and Yoichi Sato},
 	title = {{Joint Recovery of Dense Correspondence and Cosegmentation in Two Images}},
 	booktitle = {IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+	pages = {4246--4255},
 	month = {June},
 	year = {2016}
 }

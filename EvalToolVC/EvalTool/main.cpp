@@ -12,6 +12,7 @@ using namespace cv;
 cv::Scalar BGCOLOR = cv::Scalar(255, 255, 0);
 cv::Scalar FLBGCOLOR = cv::Scalar(128, 128, 128);
 bool autoFlip = false;
+bool usePrec = false;
 
 void load_data(string dir, cv::Mat& flow1, cv::Mat& flow2, cv::Mat& mask1, cv::Mat& mask2, string& image1 = string(), string& image2 = string())
 {
@@ -51,7 +52,12 @@ cv::Mat_<double> compute_score(cv::Mat maskGT1, cv::Mat flowGT1, cv::Mat mask1, 
 
 	if (!mask1.empty())
 	{
-		s.at<double>(0) = (double)cv::countNonZero(maskGT1 & mask1) / cv::countNonZero(maskGT1 | mask1);
+		if (usePrec)
+			// Precision (accurate pixel rate)
+			s.at<double>(0) = 1.0 - (double)cv::countNonZero(maskGT1 ^ mask1) / maskGT1.size().area();
+		else
+			// Intersection-over-union
+			s.at<double>(0) = (double)cv::countNonZero(maskGT1 & mask1) / cv::countNonZero(maskGT1 | mask1);
 	}
 
 	if (!flow1.empty())
@@ -202,7 +208,8 @@ void run_evaluation(string resultDir, string datasetDir)
 		return;
 	}
 
-	fprintf(scoreTable, "%s,%s,%s,%s,%s", "Row", "Src", "Ref", "SegIUR", "Flip");
+	const char* smetric = usePrec ? "SegPrec" : "SegIUR";
+	fprintf(scoreTable, "%s,%s,%s,%s,%s", "Row", "Src", "Ref", smetric, "Flip");
 
 	cv::Mat_<double> thresholds(THRESHOLD, 1);
 	for (int i = 0; i < THRESHOLD; i++) {
@@ -291,7 +298,7 @@ void run_evaluation(string resultDir, string datasetDir)
 	fclose(scoreTable);
 
 	printf("------------- Score Summary ----------------------\n");
-	printf("%8s %8s %8s %8s %8s %8s\n", "IUR", "FA1", "FA2", "FA3", "FA4", "FA5");
+	printf("%8s %8s %8s %8s %8s %8s\n", smetric, "FA1", "FA2", "FA3", "FA4", "FA5");
 	printf("%8.3lf %8.3lf %8.3lf %8.3lf %8.3lf %8.3lf\n", score.at<double>(0), score.at<double>(1), score.at<double>(2), score.at<double>(3), score.at<double>(4), score.at<double>(5));
 
 }
@@ -317,7 +324,9 @@ int main(int argn, char** args)
 	std::string mode = "evaluation";
 	argParser.TryGetArgment("mode", mode);
 	argParser.TryGetArgment("autoFlip", autoFlip); // Use only when cosegmentation methods are not aware which of 0/1 is the foreground label.
+	argParser.TryGetArgment("usePrec", usePrec);
 	std::cout << "Auto flip segmentation mask  : " << (autoFlip ? "on" : "off") << " (Use only when foreground label is not consistent. Enabled by -autoFlip 1)" << std::endl;
+	std::cout << "Evaluate by precision        : " << (usePrec ? "on" : "off") << " (Use precision instead of IUR for segmentation. Enabled by -usePrec 1)" << std::endl;
 
 
 	if (mode == "evaluation")

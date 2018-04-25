@@ -52,6 +52,8 @@ Segmentation accuracy:
 ----------------------
 
 Given the estimated foreground mask and the ground truth foreground masks for each image, the segmentation accuracy is computed in terms of the intersection-over-union ratio metric.
+When a method does not distinguish foreground and background, then use the "autoFlip" feature, which automatically flips labels so as to maximize the scores.
+VC version only: When the "usePrec" commandline option is enabled, then the accuracy is evaluated by precision (ratio of accurate-over-all pixels).
 
 
 --------------
@@ -79,3 +81,4 @@ History:
 06/10/2016 v1.0 Released the evaluation kit
 07/28/2016 v1.1 Added "autoFlip" option
 08/26/2016 v1.2 Added more example results and fixed bat files of EvalToolVC. Released windows binaries using Github releases.
+04/24/2018 v1.3 Added "usePrec" option for VC version
